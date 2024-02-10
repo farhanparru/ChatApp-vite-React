@@ -26,7 +26,7 @@ const registerUser = async(req,res)=>{
     if(!validator.isEmail(email)) 
     return res.status(400).json("Emial must be a valid email..")
 
-    if(!validator.isStrongPassword(password)) 
+    if(validator.isStrongPassword(password)) 
     return res.status(400).json("Pasword must be a strong password..")
     
     user = new userModel({name,email,password})

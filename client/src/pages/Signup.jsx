@@ -1,11 +1,12 @@
 import { Alert,Button,Form,Row,Col,Stack } from "react-bootstrap";
 import { useContext } from "react";
-import { AuthContext } from "../context/ContextAuth";
+import { Data } from "../App";
 const Signup = () => {
+  const {signupInfo,updateSignupInfo,SignupUser,signupError,isSignupLoading,} = useContext(Data)
 
-  const {user} = useContext(AuthContext)
-    return <>
-        <Form>
+    return (
+    <>
+        <Form onSubmit={SignupUser}>
           <Row style={{
             height:"100vh",
             justifyContent:"center",
@@ -14,19 +15,34 @@ const Signup = () => {
            <Col xs={6}>
           <Stack gap={3}>   
          <h2>Signup</h2>
-         <h2>{user.name}</h2>
-         <Form.Control type="text" placeholder="Name" />
-         <Form.Control type="email" placeholder="email" />
-         <Form.Control type="password" placeholder="Password" />
+         
+         <Form.Control type="text" placeholder="Name" onChange={(e)=> updateSignupInfo
+         // eslint-disable-next-line no-unexpected-multiline
+         ({...signupInfo,name:e.target.value})}/>
+         <Form.Control type="email" placeholder="email" onChange={(e)=>updateSignupInfo
+         // eslint-disable-next-line no-unexpected-multiline
+          ({...signupInfo,email:e.target.value})}/>
+
+         <Form.Control type="password" placeholder="Password" onChange={(e)=>updateSignupInfo
+         // eslint-disable-next-line no-unexpected-multiline
+          ({...signupInfo,password:e.target.value})}/>
+
          <Button variant="primary" type="submit">
-            Signup
-         </Button>
-         <Alert variant="danger"><p>An Error occured</p></Alert>
+         {isSignupLoading ? "Creating your account": "Signup"}   
+         </Button> 
+
+         {signupError?.error && (
+          <Alert variant="danger">
+          <p>{signupError?.message}</p>
+          </Alert>
+          )}
+         
           </Stack>
          </Col>
         </Row>
         </Form>
     </>
+    )
 }
  
 export default Signup;
