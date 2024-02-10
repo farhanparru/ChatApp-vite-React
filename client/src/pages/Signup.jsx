@@ -1,6 +1,9 @@
 import { Alert,Button,Form,Row,Col,Stack } from "react-bootstrap";
-
+import { useContext } from "react";
+import { AuthContext } from "../context/ContextAuth";
 const Signup = () => {
+
+  const {user} = useContext(AuthContext)
     return <>
         <Form>
           <Row style={{
@@ -11,6 +14,7 @@ const Signup = () => {
            <Col xs={6}>
           <Stack gap={3}>   
          <h2>Signup</h2>
+         <h2>{user.name}</h2>
          <Form.Control type="text" placeholder="Name" />
          <Form.Control type="email" placeholder="email" />
          <Form.Control type="password" placeholder="Password" />
