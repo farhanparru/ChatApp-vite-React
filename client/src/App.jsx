@@ -5,63 +5,84 @@
  import "bootstrap/dist/css/bootstrap.min.css"
  import {Container} from 'react-bootstrap'
  import NavaBar from './components/Navabar'
- import { createContext, useCallback, useState } from 'react'
-import { postRequest,baseUrl } from './utils/services'
+ import { createContext, useCallback, useEffect, useState } from 'react'
+ import { postRequest } from './utils/services'
+ import { baseUrl } from './utils/services'
+
+
 
 
 
   export const Data=createContext()
 
   function App() {
+    
 
   const [user,setUser]= useState(null)
-  const [signupError,setSignupError] = useState(null)
-  const [isSignupLoading,setIsSignupLoading] = useState(false)
+  const [signupError,setSignupError]= useState(null)
+  const [isSignupLoading,setIsSignupLoading] = useState(false);
   const [signupInfo,setSignupInfo]=useState({
     name:"",
     email:"",
     password:"",
   })
 
+  console.log("sdi",user);
+
+  useEffect(()=>{
+      const user = localStorage.getItem("User")
+
+      setUser(JSON.parse(user))
+  },[])
+
   console.log("register",signupInfo);
   const updateSignupInfo = useCallback((info)=>{
        setSignupInfo(info)
   },[])
 
-  const SignupUser = useCallback(async(e)=>{
+   const signupUser = useCallback(async(e)=>{
     e.preventDefault()
-    
     setIsSignupLoading(true)
     setSignupError(null)
-    
-   // eslint-disable-next-line no-undef
-   const response =  
-   await postRequest(`${baseUrl}/users/signup`,JSON.stringify
-   // eslint-disable-next-line no-unexpected-multiline
-   (signupInfo))
 
-   setIsSignupLoading(false)
-  
+   const response = await postRequest(
+   
+    `${baseUrl}/users/register`,
+    JSON.stringify(signupInfo)
+    );
+   
+    setIsSignupLoading(false)
+
 
    if(response.error){
-    return setSignupError(response)
+     return setSignupError(response)
    }
-   localStorage.setItem('user',JSON.stringify(response))
-   console.log(localStorage);
-  setUser(response)
 
-  }, [signupInfo]);
+  localStorage.setItem('User',JSON.stringify(response))
+  setUser(response)
+   
+  }, [signupInfo])
+
+ 
+   
 
   return<>
   <>
     <NavaBar/>
   </>
   <Container>
-  <Data.Provider value={{user,signupInfo,updateSignupInfo,SignupUser,signupError,isSignupLoading}}>
+  <Data.Provider value={{
+    user,
+    signupInfo,
+    updateSignupInfo,
+    signupUser,
+    signupError,
+    isSignupLoading
+    }}>
     <Routes>
-      <Route path='/' element={<Chat/>}/>
-      <Route path='/signup' element={<Signup/>}/>
-      <Route path='/login' element={<Login/>}/>
+      <Route path='/' element={user ? <Chat/> : <Login/>}/>
+      <Route path='/signup' element={user ? <Chat/> :<Signup/>}/>
+      <Route path='/login' element={user ?<Chat/> : <Login/>}/>
       <Route path='*' element={<Navigate to="/"/>}/>
     </Routes>
     </Data.Provider>

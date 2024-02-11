@@ -2,11 +2,11 @@ import { Alert,Button,Form,Row,Col,Stack } from "react-bootstrap";
 import { useContext } from "react";
 import { Data } from "../App";
 const Signup = () => {
-  const {signupInfo,updateSignupInfo,SignupUser,signupError,isSignupLoading,} = useContext(Data)
+  const {signupInfo,updateSignupInfo,signupUser,signupError,isSignupLoading} = useContext(Data)
 
     return (
     <>
-        <Form onSubmit={SignupUser}>
+        <Form onSubmit={signupUser}>
           <Row style={{
             height:"100vh",
             justifyContent:"center",
@@ -28,14 +28,16 @@ const Signup = () => {
           ({...signupInfo,password:e.target.value})}/>
 
          <Button variant="primary" type="submit">
-         {isSignupLoading ? "Creating your account": "Signup"}   
+          {isSignupLoading ? "Creating your account" : "Signup"}
          </Button> 
 
-         {signupError?.error && (
+          {signupError?.error && (
           <Alert variant="danger">
           <p>{signupError?.message}</p>
           </Alert>
+        
           )}
+         
          
           </Stack>
          </Col>
