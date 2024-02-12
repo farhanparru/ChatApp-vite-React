@@ -26,5 +26,6 @@ app.listen(port,(req,res)=>{
      
 mongoose.connect(uri,{
    useNewUrlParser: true,
-   useUnifiedTopology: true
+   useUnifiedTopology: true 
 }).then(()=>console.log("MongoDb connection established🌐")).catch((error)=>console.log('MongoDb connection failed:',error.message))
+    

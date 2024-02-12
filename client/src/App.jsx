@@ -8,11 +8,7 @@
  import { createContext, useCallback, useEffect, useState } from 'react'
  import { postRequest } from './utils/services'
  import { baseUrl } from './utils/services'
-
-
-
-
-
+ 
   export const Data=createContext()
 
   function App() {
@@ -26,8 +22,17 @@
     email:"",
     password:"",
   })
+   
+  const[loginError,setLoginError]=useState(null)
+  const[isLoginLoading,setIsLoginLoading]=useState(false)
+  const[loginInfo,setLoginInfo]=useState({
+    email:"",
+    password:"",
+  })
 
-  console.log("sdi",user);
+
+
+   console.log("logininfo",loginInfo);
 
   useEffect(()=>{
       const user = localStorage.getItem("User")
@@ -35,9 +40,15 @@
       setUser(JSON.parse(user))
   },[])
 
-  console.log("register",signupInfo);
+  
+
   const updateSignupInfo = useCallback((info)=>{
        setSignupInfo(info)
+  },[])
+
+   
+  const updateLoginInfo = useCallback((info)=>{
+    setLoginInfo(info)
   },[])
 
    const signupUser = useCallback(async(e)=>{
@@ -61,15 +72,41 @@
   localStorage.setItem('User',JSON.stringify(response))
   setUser(response)
    
-  }, [signupInfo])
+  }, [signupInfo]
+  );
+
+
+  const loginUser = useCallback(async(e)=>{
+   
+    e.preventDefault()
+
+    setIsLoginLoading(true)
+    setLoginError(null)
+    const response = await postRequest(
+      `${baseUrl}/users/login`,
+      JSON.stringify(loginInfo)
+      );
+      setIsLoginLoading(false)
+
+      if(response.error){
+        return setLoginError(response)
+      }
+
+     localStorage.setItem("User",JSON.stringify(response))
+     setUser(response)
+  },[loginInfo])
+
+    const logoutUser = useCallback(()=>{
+     localStorage.removeItem("User");
+     setUser(null)
+    },[])
 
  
    
 
-  return<>
+  return(
   <>
-    <NavaBar/>
-  </>
+  
   <Container>
   <Data.Provider value={{
     user,
@@ -77,9 +114,17 @@
     updateSignupInfo,
     signupUser,
     signupError,
-    isSignupLoading
+    isSignupLoading,
+    logoutUser,
+    loginUser,
+    loginError,
+    loginInfo,
+    updateLoginInfo,
+    isLoginLoading
     }}>
+     <NavaBar/>
     <Routes>
+    
       <Route path='/' element={user ? <Chat/> : <Login/>}/>
       <Route path='/signup' element={user ? <Chat/> :<Signup/>}/>
       <Route path='/login' element={user ?<Chat/> : <Login/>}/>
@@ -88,5 +133,6 @@
     </Data.Provider>
     </Container>
   </>
+  )
 }
 export default App
