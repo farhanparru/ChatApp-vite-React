@@ -2,14 +2,19 @@ const express = require("express")
 const cors = require('cors')
 const mongoose = require('mongoose')
 const userRouter = require("./Routes/userRouter")
+const chatRoute = require("./Routes/chatRoute")
+const messageRoute = require("./Routes/messageRoute")
+
 const app = express()
 require('dotenv').config()
 
 app.use(express.json())
 app.use(cors())
 app.use("/api/users",userRouter)
+app.use("/api/chats",chatRoute)
+app.use("/api/messages",messageRoute)
 
-app.get("/",(req,res)=>{
+app.get("/",(req,res)=>{  
    res.send('Welcome our Chat api')
 })
 

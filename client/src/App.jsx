@@ -8,6 +8,7 @@
  import { createContext, useCallback, useEffect, useState } from 'react'
  import { postRequest } from './utils/services'
  import { baseUrl } from './utils/services'
+ import { ChatContextProvider } from './context/ChatContext'
  
   export const Data=createContext()
 
@@ -105,7 +106,7 @@
    
 
   return(
-  <>
+  <ChatContextProvider user={user}>
   
   <Container>
   <Data.Provider value={{
@@ -132,7 +133,7 @@
     </Routes>
     </Data.Provider>
     </Container>
-  </>
+  </ChatContextProvider>
   )
 }
 export default App
