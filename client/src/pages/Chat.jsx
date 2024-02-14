@@ -1,34 +1,36 @@
 import { useContext } from "react";
 import { ChatContext } from "../context/ChatContext";
 import { Container, Stack } from "react-bootstrap";
+import UserChat from "../components/chat/UserChat";
+import { Data } from "../App";
+import PotentialChats from "../components/chat/PotentialChats";
 
-const Chat = () => {
-
+   const Chat = () => {
+    const{user}=useContext(Data)
     const {userChats,isUserChatsLoading,userChatsError} = useContext(ChatContext)
 
-    console.log("UserChats",userChats);
-
+   
     return (
      <Container>
+     <PotentialChats/>
         {userChats?.length < 1 ? null :(
          <Stack direction="horizontal" gap={4} 
-         className="align-items">
+         className="align-items-start">
          <Stack className=" messages-box  flex-grow-0 pe-3" gap={3}>
-           {isUserChatsLoading && <p>Loading chats...</p>}
+          {isUserChatsLoading && <p>Loading chats...!</p>}
            {userChats?.map((chat,index)=>{
-            return(
+             return(
                 <div key={index}>
-                    
-                </div>
-            )
-
+                 <UserChat chat={chat} user={user}/>
+                 </div>
+             );
+           
            })}
          </Stack>
          <p>ChatBox</p>
         </Stack>
-       )}
-        
-        </Container> 
+       )}  
+    </Container> 
 
     )
 }
