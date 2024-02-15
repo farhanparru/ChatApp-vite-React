@@ -1,41 +1,52 @@
 import { createContext, useEffect, useState } from "react";
-import { baseUrl,getRequest,postRequest } from "../utils/services"
+import { baseUrl,getRequest, postRequest } from "../utils/services"
 
 
 export const ChatContext = createContext()
 
 // eslint-disable-next-line react/prop-types
-export const ChatContextProvider = ({children,user})=>{
+    export const ChatContextProvider = ({children,user})=>{
     const [userChats,setUserChats] = useState(null)
     const [isUserChatsLoading,setIsUserChatsLoading] = useState(false)
     const [userChatsError,setUserChatsError] = useState(null);
-    const [potentialChats,setPotentialChats] = useState([])
-
+    const [potentialChats,setPotentialChats] =useState([])
+   
 
     useEffect(()=>{
-       const getUsers = async() =>{
-        const response = await getRequest(`${baseUrl}/users`);
+    
+      const getUsers = async() =>{
+
+        const response = await getRequest(`${baseUrl}/users`)
+        // console.log(response,"hai");
 
         if(response.error){
-            return console.log('Error fetching users',response);
+        return console.log("Error fethcing users",response);
         }
-       const pChats = response.filter((u)=>{
-        let isChatCreated = false
-           // eslint-disable-next-line react/prop-types
-           if(user._id === u._id) return false;
-           
-          if(userChats){
-            isChatCreated = userChats?.some((chat)=>{
-                return chat.members[0] === u._id || chat.members[1] === u._id
-            })
-          }
-           return !isChatCreated
-        });
-        setPotentialChats(pChats)
 
-       }
-       getUsers()
-    },[userChats]);
+       const Chatsp =  response.filter((e)=>{
+        let isChatCreated = false
+            // eslint-disable-next-line react/prop-types
+            if(user._id === e._id) return false
+            if(userChats){
+              userChats?.some((chat)=>{
+                return chat.members[0] ===e._id
+              })
+            }
+
+        });
+      };
+
+
+    getUsers()
+    }) 
+
+       
+   
+
+
+
+
+
 
     useEffect(()=>{
        const getUserChats = async()=>{
@@ -62,7 +73,8 @@ export const ChatContextProvider = ({children,user})=>{
         userChats,
         isUserChatsLoading,
         userChatsError,
-        potentialChats
+       
+       
     }}>
     {children}
     </ChatContext.Provider>

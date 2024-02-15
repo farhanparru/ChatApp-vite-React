@@ -3,7 +3,7 @@ import { ChatContext } from "../context/ChatContext";
 import { Container, Stack } from "react-bootstrap";
 import UserChat from "../components/chat/UserChat";
 import { Data } from "../App";
-import PotentialChats from "../components/chat/PotentialChats";
+
 
    const Chat = () => {
     const{user}=useContext(Data)
@@ -12,7 +12,7 @@ import PotentialChats from "../components/chat/PotentialChats";
    
     return (
      <Container>
-     <PotentialChats/>
+   
         {userChats?.length < 1 ? null :(
          <Stack direction="horizontal" gap={4} 
          className="align-items-start">
